@@ -32,7 +32,11 @@ export const createTransactionRequestHandler = ({ processCommission, convert }: 
       amountInCents: commissionAmountInCents,
       currency: commissionCurrency
     } = await processCommission({
-      transaction:  {date, amountInCents: convertedAmountInCents, currency: CURRENCY.EURO, clientId}
+      transaction:  {
+        date: convertDateToDomainFormat(date),
+        amountInCents: convertedAmountInCents,
+        currency: CURRENCY.EURO, clientId
+      }
     });
 
     res.send({

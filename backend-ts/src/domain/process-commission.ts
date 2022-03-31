@@ -6,7 +6,6 @@ import {
   Transaction
 } from "./types";
 import {Repository} from "./repository";
-import {convertDateToDomainFormat} from "./helpers";
 
 const getClientTransactionsTurnover = async ({ repository, clientId, calendarMonth }: {
   repository: Repository,
@@ -40,25 +39,25 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
       // Compute all commissions for the current transaction, maybe store the results in an array
 
       const results = commissionRules.map(async (commissionRule) => {
-        const { percentage, minimumFeeInCents, clientId, turnoverThresholdInCents, turnoverFee } = commissionRule;
+        const { percentage, minimumFeeInCents, clientId, clientFeeInCents, turnoverThresholdInCents, turnoverFee } = commissionRule;
 
         if (percentage) {
           return transaction.amountInCents * parseFloat(percentage);
         }
 
-        if (clientId && clientId === transaction.clientId) {
-          return commissionRule.clientFeeInCents
+        if (clientId && clientFeeInCents && clientId === transaction.clientId) {
+          return clientFeeInCents
         }
 
         if (turnoverThresholdInCents && turnoverFee) {
           const clientTransactionsTurnover = await getClientTransactionsTurnover({
             repository,
             clientId: transaction.clientId,
-            calendarMonth: convertDateToDomainFormat(transaction.date)
+            calendarMonth: transaction.date
           });
 
           if (clientTransactionsTurnover > turnoverThresholdInCents) {
-            return commissionRule.turnoverFee;
+            return turnoverFee;
           }
         }
 

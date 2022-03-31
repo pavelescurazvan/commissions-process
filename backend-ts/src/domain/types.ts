@@ -5,7 +5,7 @@ export enum CURRENCY {
 }
 
 export type Transaction = {
-  date: Date,
+  date: string, // TODO: write custom type that uses regex to validate the date format
   amountInCents: number,
   currency: CURRENCY.EURO,
   clientId: number

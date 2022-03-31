@@ -1,19 +1,41 @@
 import express from "express";
 import * as bodyParser from "body-parser";
 import {Server} from "http";
-import {createTransactionRequestHandler, createCommissionRuleRequestHandler} from "./controller";
-import {CommissionRule, createProcessCommission} from "./domain";
-import {Repository, Transaction} from "./domain";
+import {createCommissionRuleRequestHandler, createTransactionRequestHandler} from "./controller";
+import {CommissionRule, createProcessCommission, CURRENCY, Repository, Transaction, TransactionRecord} from "./domain";
 import {createCurrencyExchangeService} from "./services/currency-exchange";
 import {createCommissionRules} from "./domain/commission-rules";
+
+const transactionsDict = new Map<string, TransactionRecord>();
 
 // TODO implement in-memory repository
 const inMemoryRepository: Repository = {
   putTransaction: (transaction: Transaction) => {
+    let lastTransactionRecord = transactionsDict.get(`${transaction.clientId}-${transaction.date}`);
 
+    if (!lastTransactionRecord) {
+      lastTransactionRecord = {
+        transactionsTurnover: 0,
+        amountInCents: 0,
+        clientId: 0,
+        date: '',
+        currency: CURRENCY.EURO
+      }
+    }
+
+    transactionsDict.set(`${transaction.clientId}-${transaction.date}`, {
+      transactionsTurnover: transaction.amountInCents + lastTransactionRecord.transactionsTurnover,
+      ...transaction
+    })
+
+    return Promise.resolve();
   },
   getLastTransaction: (clientId: number, calendarMonth: string) => {
+    const lastTransaction = transactionsDict.get(`${clientId}-${calendarMonth}`);
 
+    if (!lastTransaction) throw new Error("Transaction not found");
+
+    return Promise.resolve(lastTransaction);
   },
   putCommissionRule: (commissionRule: CommissionRule) => {
 
@@ -75,6 +97,7 @@ export const createWebServer = () => {
     },
     stop: () => {
       server.close();
-    }
+    },
+    uri: `http://localhost:${port}`
   }
 }

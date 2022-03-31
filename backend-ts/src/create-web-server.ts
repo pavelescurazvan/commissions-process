@@ -34,6 +34,7 @@ const inMemoryRepository: Repository = {
   getLastTransaction: (clientId: number, calendarMonth: string) => {
     let lastTransaction = transactionsDict.get(`${clientId}-${calendarMonth}`);
 
+    // TODO: Repository should not be responsible with creating empty records
     if (!lastTransaction) lastTransaction = {
       date: "",
       amountInCents: 0,

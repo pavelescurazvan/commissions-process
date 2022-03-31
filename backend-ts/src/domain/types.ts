@@ -4,13 +4,13 @@ export enum CURRENCY {
 
 export type Transaction = {
   date: Date,
-  amount: string,
+  amountInCents: number,
   currency: CURRENCY.EURO,
   clientId: number
 }
 
 export type Commission = {
-  amount: string,
+  amountInCents: number,
   currency: CURRENCY.EURO,
 }
 

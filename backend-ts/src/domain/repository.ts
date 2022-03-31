@@ -1,4 +1,4 @@
-import {Transaction} from "./domain";
+import {Transaction} from "./types";
 
 export interface TransactionRecord extends Transaction {
   cachedAmount: number

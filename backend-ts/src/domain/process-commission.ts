@@ -58,7 +58,7 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
  */
 const createRuleStrategiesApplier =  async (repository: Repository, transaction: Transaction) => {
 
-  return (commissionRule: CommissionRule) => {
+  return async (commissionRule: CommissionRule) => {
     const ruleStrategyApplier = await createRuleStrategyApplier(repository, transaction, commissionRule);
 
     const feesOfThisRule = await Promise.all(Object.keys(commissionRule).map(
@@ -79,9 +79,9 @@ const createRuleStrategiesApplier =  async (repository: Repository, transaction:
  * @param transaction
  * @param commissionRule
  */
-const createRuleStrategyApplier = async (repository: Repository, transaction: Transaction, commissionRule: CommissionRule) {
+const createRuleStrategyApplier = async (repository: Repository, transaction: Transaction, commissionRule: CommissionRule) => {
 
-  return (objectKey: string) => {
+  return async (objectKey: string) => {
     const { percentage, minimumFeeInCents, client, turnover } = commissionRule;
 
     if (objectKey === "percentage" && percentage) {

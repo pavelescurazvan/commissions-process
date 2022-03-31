@@ -4,7 +4,7 @@ import {createTransactionRequestHandler, createCommissionRuleRequestHandler} fro
 import {createProcessCommission} from "./domain/process-commission";
 import {Repository, Transaction} from "./domain";
 import {createCurrencyExchangeService} from "./services/currency-exchange";
-import {createCommissionRules} from "./domain/commission-rules-loader";
+import {createCommissionRules} from "./domain/commission-rules";
 
 const inMemoryRepository: Repository = {
   get: (transaction: Transaction) => {

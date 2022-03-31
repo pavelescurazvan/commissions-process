@@ -1,6 +1,5 @@
 import {
   Commission,
-  CommissionRule,
   CommissionRulesLoader,
   CreateProcessCommission,
   CURRENCY,
@@ -23,7 +22,7 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
 
   return {
     processCommission: async ({ transaction }: {
-      transaction: Transaction, commissionRules: CommissionRule[]
+      transaction: Transaction
     }): Promise<Commission> => {
       // Compute all commissions for the current transaction, maybe store the results in an array
 

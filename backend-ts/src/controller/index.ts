@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import {Repository} from "../domain";
+import {processCommission, Repository} from "../domain";
 import {CurrencyExchangeService} from "../services/currency-exchange";
 
 
@@ -30,9 +30,14 @@ export const createTransactionRequestHandler = ({ repository, currencyExchangeSe
     });
 
     // Call domain to do stuff
+    const {amountInCents: commisionAmountInCents, currency: commissionCurrency} = processCommission({
+      transaction: {},
+      commisionRules: [{}]
+    });
 
     res.send({
-      success: true
+      amount: commisionAmountInCents * 100,
+      currency: commissionCurrency
     });
   }
 

@@ -7,6 +7,7 @@ import {createCurrencyExchangeService} from "./services/currency-exchange";
 import {createCommissionRules} from "./domain/commission-rules";
 
 const transactionsDict = new Map<string, TransactionRecord>();
+const commissionRules = new Array<CommissionRule>();
 
 // TODO implement in-memory repository
 const inMemoryRepository: Repository = {
@@ -38,11 +39,12 @@ const inMemoryRepository: Repository = {
     return Promise.resolve(lastTransaction);
   },
   putCommissionRule: (commissionRule: CommissionRule) => {
+    commissionRules.push(commissionRule);
 
-
+    return Promise.resolve();
   },
   getCommissionRules: () => {
-
+    return Promise.resolve(commissionRules);
   },
 }
 

@@ -1,4 +1,11 @@
-import {Commission, CommissionRule, CreateProcessCommission, CURRENCY, Transaction} from "./types";
+import {
+  Commission,
+  CommissionRule,
+  CommissionRulesLoader,
+  CreateProcessCommission,
+  CURRENCY,
+  Transaction
+} from "./types";
 import {Repository} from "./repository";
 
 /**
@@ -8,10 +15,14 @@ import {Repository} from "./repository";
  * Returns only amounts in EUROS.
  * @param repository
  */
-export const createProcessCommission: CreateProcessCommission = (repository: Repository) => {
-
+export const createProcessCommission: CreateProcessCommission = ({repository, commissionRulesLoader}: {
+  repository: Repository,
+  commissionRulesLoader: CommissionRulesLoader
+}) => {
+  const commissionRules = commissionRulesLoader();
+  
   return {
-    processCommission: async ({ transaction, commissionRules }: {
+    processCommission: async ({ transaction }: {
       transaction: Transaction, commissionRules: CommissionRule[]
     }): Promise<Commission> => {
       // Compute all commissions for the current transaction, maybe store the results in an array

@@ -24,11 +24,20 @@ export type CommissionRule = {
   turnoverFee?: string
 }
 
-export type ProcessCommission = ({ transaction, commissionRules }: {
+export type ProcessCommission = ({ transaction }: {
   transaction: Transaction,
-  commissionRules: CommissionRule[]
 }) => Promise<Commission>
 
-export type CreateProcessCommission = (repository: Repository) => {
+export type CreateProcessCommission = ({ repository, commissionRules }: {
+  repository: Repository, commissionRules: CommissionRule[]
+}) => {
   processCommission: ProcessCommission
+}
+
+export type CommissionRulesLoader = () => Promise<CommissionRule[]>
+
+export type CreateCommissionRulesLoader = ({ repository }: {
+  repository: Repository
+}) => {
+  commissionRulesLoader: CommissionRulesLoader
 }

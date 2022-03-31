@@ -4,6 +4,7 @@ import {createTransactionRequestHandler} from "./controller";
 import {createProcessCommission} from "./domain/process-commission";
 import {Repository, Transaction} from "./domain";
 import {createCurrencyExchangeService} from "./services/currency-exchange";
+import {createCommissionRulesLoader} from "./domain/commission-rules-loader";
 
 const inMemoryRepository: Repository = {
   get: (transaction: Transaction) => {
@@ -26,7 +27,15 @@ export const createWebServer = () => {
 
   app.use("/", router);
 
-  const {processCommission} = createProcessCommission(inMemoryRepository);
+  const commissionRulesLoader = createCommissionRulesLoader({
+    repository: inMemoryRepository,
+  });
+
+  const {processCommission} = createProcessCommission({
+    repository: inMemoryRepository,
+    commissionRulesLoader
+  });
+
   const {convert} = createCurrencyExchangeService();
 
   const transactionRequestHandler = createTransactionRequestHandler({

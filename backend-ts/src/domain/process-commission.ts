@@ -15,5 +15,5 @@ export const processCommission = ({ transaction, commisionRules }: {
 
   // Order the array based on the fee amount and return the smallest result
 
-  return {amount: "1", currency: CURRENCY.EURO};
+  return {amountInCents: 1, currency: CURRENCY.EURO};
 }

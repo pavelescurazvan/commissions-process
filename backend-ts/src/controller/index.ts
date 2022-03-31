@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import {processCommission, Repository} from "../domain";
+import {ProcessCommission} from "../domain";
 import {CurrencyExchangeService} from "../services/currency-exchange";
 
 
@@ -8,14 +8,14 @@ import {CurrencyExchangeService} from "../services/currency-exchange";
  * @param repository
  * @param currencyExchangeService
  */
-export const createTransactionRequestHandler = ({ repository, currencyExchangeService }: {
-  repository: Repository,
+export const createTransactionRequestHandler = ({ processCommission, currencyExchangeService }: {
+  processCommission: ProcessCommission,
   currencyExchangeService: CurrencyExchangeService
 }): RequestHandler  => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const {date, amount, currency, clientId} = req.body;
 
     if (!date) throw new Error("Date is undefined"); // TODO: validate that it's actual date in the correct format
@@ -30,7 +30,7 @@ export const createTransactionRequestHandler = ({ repository, currencyExchangeSe
     });
 
     // Call domain to do stuff
-    const {amountInCents: commisionAmountInCents, currency: commissionCurrency} = processCommission({
+    const {amountInCents: commisionAmountInCents, currency: commissionCurrency} = await processCommission({
       transaction: {},
       commisionRules: [{}]
     });

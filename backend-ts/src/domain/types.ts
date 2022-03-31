@@ -21,3 +21,15 @@ export type CommissionRule = {
   turnoverThreshold?: string,
   turnoverFee?: string
 }
+
+export type ProcessCommission = ({ transaction, commissionRules }: {
+  transaction: Transaction,
+  commissionRules: CommissionRule[]
+}) => Promise<{
+  amountInCents: number,
+  currency: CURRENCY.EURO
+}>
+
+export interface CreateProcessCommission {
+  processCommission: ProcessCommission
+}

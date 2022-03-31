@@ -6,7 +6,6 @@ import {
   Transaction
 } from "./types";
 import {Repository} from "./repository";
-import {create} from "domain";
 
 const getClientTransactionsTurnover = async ({ repository, clientId, calendarMonth }: {
   repository: Repository,
@@ -74,6 +73,12 @@ const createRuleStrategiesApplier =  async (repository: Repository, transaction:
   }
 }
 
+/**
+ * Apply a commission rule strategy
+ * @param repository
+ * @param transaction
+ * @param commissionRule
+ */
 const createRuleStrategyApplier = async (repository: Repository, transaction: Transaction, commissionRule: CommissionRule) {
 
   return (objectKey: string) => {

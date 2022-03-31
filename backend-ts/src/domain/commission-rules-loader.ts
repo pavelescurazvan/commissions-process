@@ -1,11 +1,10 @@
 import {
-  CommissionRule,
-  CreateCommissionRulesLoader,
+  CommissionRule, CreateCommissionRules,
 } from "./types";
 import {Repository} from "./repository";
 
 
-export const createCommissionRulesLoader: CreateCommissionRulesLoader = ({ repository }: {
+export const createCommissionRules: CreateCommissionRules = ({ repository }: {
   repository: Repository
 }) => {
 

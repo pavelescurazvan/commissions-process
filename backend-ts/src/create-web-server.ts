@@ -1,10 +1,10 @@
 import express from "express";
 import {Server} from "http";
-import {createTransactionRequestHandler} from "./controller";
+import {createTransactionRequestHandler, createCommissionRuleRequestHandler} from "./controller";
 import {createProcessCommission} from "./domain/process-commission";
 import {Repository, Transaction} from "./domain";
 import {createCurrencyExchangeService} from "./services/currency-exchange";
-import {createCommissionRulesLoader} from "./domain/commission-rules-loader";
+import {createCommissionRules} from "./domain/commission-rules-loader";
 
 const inMemoryRepository: Repository = {
   get: (transaction: Transaction) => {
@@ -27,7 +27,11 @@ export const createWebServer = () => {
 
   app.use("/", router);
 
-  const {commissionRulesLoader} = createCommissionRulesLoader({
+  // Services
+  const {convert} = createCurrencyExchangeService();
+
+  // Domain
+  const {commissionRulesLoader, defineCommissionRule} = createCommissionRules({
     repository: inMemoryRepository,
   });
 
@@ -36,14 +40,19 @@ export const createWebServer = () => {
     commissionRulesLoader
   });
 
-  const {convert} = createCurrencyExchangeService();
-
+  // Request handlers
   const transactionRequestHandler = createTransactionRequestHandler({
     processCommission,
     convert
   });
 
   router.post('/transaction', transactionRequestHandler);
+
+  const commissionRuleRequestHandler = createCommissionRuleRequestHandler({
+    defineCommissionRule
+  });
+
+  router.post('/commission-rule', commissionRuleRequestHandler);
 
   let server: Server;
   return {

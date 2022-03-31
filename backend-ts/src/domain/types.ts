@@ -35,9 +35,11 @@ export type CreateProcessCommission = ({ repository, commissionRulesLoader }: {
 }
 
 export type CommissionRulesLoader = () => Promise<CommissionRule[]>
+export type DefineCommissionRule = (commissionRule: CommissionRule) => Promise<void>
 
-export type CreateCommissionRulesLoader = ({ repository }: {
+export type CreateCommissionRules = ({ repository }: {
   repository: Repository
 }) => {
   commissionRulesLoader: CommissionRulesLoader
+  defineCommissionRule: DefineCommissionRule
 }

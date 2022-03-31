@@ -38,36 +38,49 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
 
       // Compute all commissions for the current transaction, maybe store the results in an array
 
-      const results = commissionRules.map(async (commissionRule) => {
-        const { percentage, minimumFeeInCents, clientId, clientFeeInCents, turnoverThresholdInCents, turnoverFee } = commissionRule;
+      const feesOfRules = await Promise.all(commissionRules.map(async (commissionRule) => {
+        const { percentage, minimumFeeInCents, client, turnover } = commissionRule;
 
-        if (percentage) {
-          return transaction.amountInCents * parseFloat(percentage);
-        }
+        const feesOfThisRule = await Promise.all(Object.keys(commissionRule).map(async (objectKey) => {
 
-        if (clientId && clientFeeInCents && clientId === transaction.clientId) {
-          return clientFeeInCents
-        }
-
-        if (turnoverThresholdInCents && turnoverFee) {
-          const clientTransactionsTurnover = await getClientTransactionsTurnover({
-            repository,
-            clientId: transaction.clientId,
-            calendarMonth: transaction.date
-          });
-
-          if (clientTransactionsTurnover > turnoverThresholdInCents) {
-            return turnoverFee;
+          if (objectKey === "percentage" && percentage) {
+            return transaction.amountInCents * parseFloat(percentage);
           }
-        }
 
-        // Simplest case
-        return minimumFeeInCents;
-      });
+          if (objectKey === 'client' && client && client.clientId === transaction.clientId) {
+            return client.clientFeeInCents;
+          }
 
-      // Order the array based on the fee amount and return the smallest result
+          if (objectKey === 'turnover' && turnover) {
+            const clientTransactionsTurnover = await getClientTransactionsTurnover({
+              repository,
+              clientId: transaction.clientId,
+              calendarMonth: transaction.date
+            });
 
-      return {amountInCents: 1, currency: CURRENCY.EURO};
+            if (clientTransactionsTurnover > turnover.turnoverThresholdInCents) {
+              return turnover.turnoverFeeInCents;
+            }
+          }
+
+          // Simplest case
+          return minimumFeeInCents;
+
+        }));
+
+        feesOfThisRule.sort((a, b) => {
+          return a < b ? a : b;
+        })
+
+        return feesOfThisRule[0];
+
+      }))
+
+      feesOfRules.sort((a, b) => {
+        return a < b ? a : b;
+      })
+
+      return {amountInCents: feesOfRules[0], currency: CURRENCY.EURO};
     }
   }
 }

@@ -1,5 +1,6 @@
 import {RequestHandler} from "express";
 import {DefineCommissionRule} from "../domain/types";
+import {convertInCents} from "./helpers";
 
 
 /**

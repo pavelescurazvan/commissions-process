@@ -6,9 +6,9 @@ import {createWebServer} from "../create-web-server";
 describe('transaction handler', () => {
   const server = createWebServer();
 
-  describe('GIVEN a valid payload', () => {
+  describe('GIVEN api is running', () => {
 
-    before(() => {
+    before(async () => {
       server.start();
     });
 
@@ -16,7 +16,26 @@ describe('transaction handler', () => {
       server.stop();
     })
 
-    describe("WHEN making POST to the transaction endpoint", () => {
+    describe("AND commission rule is inserted with valid request", () => {
+      before(async () => {
+        const {body} = await needle("post", `${server.uri}/commission-rule`, {
+          percentage: "0.5",
+          minimumFee: "0.05",
+          clientId: 42,
+          clientFee: "0.05",
+          turnoverThreshold: "1000.00",
+          turnoverFee: "0.03"
+        }, {
+          json: true,
+        });
+
+        expect(body.success).to.equal(true);
+
+      });
+
+
+      describe("WHEN making POST to the transaction endpoint", () => {
+
         it ("THEN should return a valid response", async () => {
           const {body} = await needle("post", `${server.uri}/transaction`, {
             date: "2021-01-01",
@@ -30,7 +49,8 @@ describe('transaction handler', () => {
           expect(body.amount).to.equal("1");
           expect(body.currency).to.equal(CURRENCY.EURO);
         });
-    });
+      });
+    })
   });
 
 })

@@ -32,9 +32,15 @@ const inMemoryRepository: Repository = {
     return Promise.resolve();
   },
   getLastTransaction: (clientId: number, calendarMonth: string) => {
-    const lastTransaction = transactionsDict.get(`${clientId}-${calendarMonth}`);
+    let lastTransaction = transactionsDict.get(`${clientId}-${calendarMonth}`);
 
-    if (!lastTransaction) throw new Error("Transaction not found");
+    if (!lastTransaction) lastTransaction = {
+      date: "",
+      amountInCents: 0,
+      currency: CURRENCY.EURO,
+      clientId,
+      transactionsTurnover: 0
+    }
 
     return Promise.resolve(lastTransaction);
   },

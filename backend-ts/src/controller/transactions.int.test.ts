@@ -30,7 +30,6 @@ describe('transaction handler', () => {
         });
 
         expect(body.success).to.equal(true);
-
       });
 
 

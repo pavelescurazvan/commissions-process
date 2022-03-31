@@ -1,3 +1,5 @@
+import {Repository} from "./repository";
+
 export enum CURRENCY {
   "EURO" = "EURO",
 }
@@ -25,11 +27,8 @@ export type CommissionRule = {
 export type ProcessCommission = ({ transaction, commissionRules }: {
   transaction: Transaction,
   commissionRules: CommissionRule[]
-}) => Promise<{
-  amountInCents: number,
-  currency: CURRENCY.EURO
-}>
+}) => Promise<Commission>
 
-export interface CreateProcessCommission {
+export type CreateProcessCommission = (repository: Repository) => {
   processCommission: ProcessCommission
 }

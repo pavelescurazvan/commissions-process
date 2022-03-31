@@ -10,13 +10,23 @@ export const createCommissionRuleRequestHandler = ({ defineCommissionRule }: {
 }): RequestHandler  => {
 
   return async (req, res) => {
-    const {percentage,  minimumFee, clientId, turnoverThreshold, turnoverFee} = req.body;
+    const {percentage,  minimumFee, clientId, clientFee, turnoverThreshold, turnoverFee} = req.body;
 
     const minimumFeeInCents = convertInCents(minimumFee);
 
     // TODO: Do validation on the commission rule. Basically a rule could have multiple fields undefined, but not all of them
 
-    await defineCommissionRule({ percentage,  minimumFeeInCents, clientId, turnoverThreshold, turnoverFee });
+    const client = {
+      clientId,
+      clientFeeInCents: convertInCents(clientFee)
+    }
+
+    const turnover = {
+      turnoverThresholdInCents: convertInCents(turnoverThreshold),
+      turnoverFeeInCents: convertInCents(turnoverFee)
+    }
+
+    await defineCommissionRule({ percentage,  minimumFeeInCents, client, turnover });
 
     res.send({
       success: true

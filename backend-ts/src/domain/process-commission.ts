@@ -85,7 +85,7 @@ const createRuleStrategyApplier = async (repository: Repository, transaction: Tr
     const { percentage, minimumFeeInCents, client, turnover } = commissionRule;
 
     if (objectKey === "percentage" && percentage) {
-      return transaction.amountInCents * parseFloat(percentage);
+      return transaction.amountInCents * parseFloat(percentage) / 10;
     }
 
     if (objectKey === 'client' && client && client.clientId === transaction.clientId) {

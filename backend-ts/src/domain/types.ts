@@ -28,8 +28,8 @@ export type ProcessCommission = ({ transaction }: {
   transaction: Transaction,
 }) => Promise<Commission>
 
-export type CreateProcessCommission = ({ repository, commissionRules }: {
-  repository: Repository, commissionRules: CommissionRule[]
+export type CreateProcessCommission = ({ repository, commissionRulesLoader }: {
+  repository: Repository, commissionRulesLoader: CommissionRulesLoader
 }) => {
   processCommission: ProcessCommission
 }

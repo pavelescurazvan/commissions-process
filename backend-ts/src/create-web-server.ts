@@ -27,7 +27,7 @@ export const createWebServer = () => {
 
   app.use("/", router);
 
-  const commissionRulesLoader = createCommissionRulesLoader({
+  const {commissionRulesLoader} = createCommissionRulesLoader({
     repository: inMemoryRepository,
   });
 

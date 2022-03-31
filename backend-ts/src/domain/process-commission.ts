@@ -20,7 +20,7 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
   commissionRulesLoader: CommissionRulesLoader
 }) => {
   const commissionRules = commissionRulesLoader();
-  
+
   return {
     processCommission: async ({ transaction }: {
       transaction: Transaction, commissionRules: CommissionRule[]

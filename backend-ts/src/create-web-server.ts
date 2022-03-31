@@ -1,18 +1,26 @@
 import express from "express";
 import {Server} from "http";
 import {createTransactionRequestHandler, createCommissionRuleRequestHandler} from "./controller";
-import {createProcessCommission} from "./domain/process-commission";
+import {CommissionRule, createProcessCommission} from "./domain";
 import {Repository, Transaction} from "./domain";
 import {createCurrencyExchangeService} from "./services/currency-exchange";
 import {createCommissionRules} from "./domain/commission-rules";
 
+// TODO implement in-memory repository
 const inMemoryRepository: Repository = {
-  get: (transaction: Transaction) => {
+  putTransaction: (transaction: Transaction) => {
 
   },
-  put: (clientId: number, calendarMonth: string) => {
+  getLastTransaction: (clientId: number, calendarMonth: string) => {
 
-  }
+  },
+  putCommissionRule: (commissionRule: CommissionRule) => {
+
+
+  },
+  getCommissionRules: () => {
+
+  },
 }
 
 /**

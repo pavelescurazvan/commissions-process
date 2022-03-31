@@ -18,9 +18,10 @@ export type Commission = {
 
 export type CommissionRule = {
   percentage?: string,
-  minimumFee: string,
-  clientId?: number, // Applies only to a specific client ID
-  turnoverThreshold?: string,
+  minimumFeeInCents: number,
+  clientId?: number,
+  clientFeeInCents?: number,
+  turnoverThresholdInCents?: number,
   turnoverFee?: string
 }
 

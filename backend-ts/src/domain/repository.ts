@@ -1,12 +1,14 @@
-import {Transaction} from "./types";
+import {CommissionRule, Transaction} from "./types";
 
 export interface TransactionRecord extends Transaction {
   cachedAmount: number
 }
 
 export interface Repository {
-  put: (transaction: Transaction) => Promise<void>,
-  get: (clientId: number, calendarMonth: string) => Promise<TransactionRecord[]>,
+  putTransaction: (transaction: Transaction) => Promise<void>,
+  getTransaction: (clientId: number, calendarMonth: string) => Promise<TransactionRecord[]>,
+  putCommissionRule: (commissionRule: CommissionRule) => Promise<void>,
+  getCommissionRules: () => Promise<CommissionRule[]>,
 }
 
 // trans 1 -- details - user id 1 - calendarMonth - currentTotalAmount

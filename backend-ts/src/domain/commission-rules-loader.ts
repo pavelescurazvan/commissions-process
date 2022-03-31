@@ -11,11 +11,10 @@ export const createCommissionRulesLoader: CreateCommissionRulesLoader = ({ repos
 
   return {
     commissionRulesLoader: async (): Promise<CommissionRule[]> => {
-      // Compute all commissions for the current transaction, maybe store the results in an array
-
-      // Order the array based on the fee amount and return the smallest result
-
-      return [{}];
+      return await repository.getCommissionRules();
+    },
+    defineCommissionRule: async (commissionRule: CommissionRule): Promise<void> => {
+      await repository.putCommissionRule(commissionRule);
     }
   }
 }

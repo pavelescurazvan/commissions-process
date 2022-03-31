@@ -1,4 +1,5 @@
 import express from "express";
+import * as bodyParser from "body-parser";
 import {Server} from "http";
 import {createTransactionRequestHandler, createCommissionRuleRequestHandler} from "./controller";
 import {CommissionRule, createProcessCommission} from "./domain";
@@ -30,6 +31,9 @@ export const createWebServer = () => {
   const port = 8080;
 
   const app = express();
+
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
 
   const router = express.Router();
 

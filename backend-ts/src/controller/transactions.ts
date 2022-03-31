@@ -1,6 +1,7 @@
 import {RequestHandler} from "express";
 import {CURRENCY, ProcessCommission} from "../domain";
 import {Convert} from "../services";
+import {convertDateToDomainFormat, convertFromCents, convertInCents} from "./helpers";
 
 
 /**
@@ -33,7 +34,7 @@ export const createTransactionRequestHandler = ({ processCommission, convert }: 
       currency: commissionCurrency
     } = await processCommission({
       transaction:  {
-        date: convertDateToDomainFormat(date),
+        date: convertDateToDomainFormat(new Date(date)),
         amountInCents: convertedAmountInCents,
         currency: CURRENCY.EURO, clientId
       }

@@ -43,7 +43,7 @@ export const createProcessCommission: CreateProcessCommission = ({repository, co
       const feesOfRules = await Promise.all(commissionRules.map(ruleStrategiesApplier));
 
       feesOfRules.sort((a, b) => {
-        return a < b ? a : b;
+        return a > b ? a : b;
       })
 
       return {amountInCents: feesOfRules[0], currency: CURRENCY.EURO};
@@ -66,7 +66,7 @@ const createRuleStrategiesApplier =  async (repository: Repository, transaction:
     ));
 
     feesOfThisRule.sort((a, b) => {
-      return a < b ? a : b;
+      return a > b ? a : b;
     })
 
     return feesOfThisRule[0];

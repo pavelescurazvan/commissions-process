@@ -36,7 +36,8 @@ export const createTransactionRequestHandler = ({ processCommission, convert }: 
       transaction:  {
         date: convertDateToDomainFormat(new Date(date)),
         amountInCents: convertedAmountInCents,
-        currency: CURRENCY.EURO, clientId
+        currency: CURRENCY.EURO,
+        clientId
       }
     });
 

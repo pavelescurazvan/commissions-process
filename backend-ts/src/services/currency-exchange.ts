@@ -37,10 +37,9 @@ export const createCurrencyExchangeService = (): CurrencyExchangeService => {
       const {data} = await axios.default.get(`${exchangeURL}/${date}`);
       const {rates} = data;
       const exchangeRate = rates[sourceCurrency];
-      const exchangeRateInCents = exchangeRate * 100;
 
       return {
-        amountInCents: amountInCents * exchangeRateInCents,
+        amountInCents: amountInCents * exchangeRate,
         date,
         sourceCurrency: CURRENCY.EURO
       }

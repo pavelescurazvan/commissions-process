@@ -45,7 +45,7 @@ describe('transaction handler', () => {
             json: true,
           });
 
-          expect(body.amount).to.equal("1");
+          expect(body.amount).to.equal("0.50");
           expect(body.currency).to.equal(CURRENCY.EURO);
         });
       });

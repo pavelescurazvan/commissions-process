@@ -1,19 +1,22 @@
 import * as axios from "axios";
 import {CURRENCY} from "../domain";
 
+export type Convert = ({amountInCents, sourceCurrency}: {
+  amountInCents: number
+  date: string
+  sourceCurrency: CURRENCY
+  destinationCurrency: CURRENCY.EURO
+}) => Promise<{
+  amountInCents: number
+  date: string
+  sourceCurrency: CURRENCY.EURO
+}>;
+
 /**
  * Converts amouts from a number of currencies to EURO.
  */
 export interface CurrencyExchangeService {
-  convert: ({amountInCents, sourceCurrency}: {
-    amountInCents: number
-    date: string
-    sourceCurrency: CURRENCY
-  }) => Promise<{
-    amountInCents: number
-    date: string
-    sourceCurrency: CURRENCY.EURO
-  }>
+  convert: Convert
 }
 
 /**

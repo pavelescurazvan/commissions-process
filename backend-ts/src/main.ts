@@ -1,5 +1,5 @@
-export const greet = (): void => {
-  console.log('Hello, world')
-}
+import {createWebServer} from "./create-web-server";
 
-greet()
+const server = createWebServer();
+
+server.start();

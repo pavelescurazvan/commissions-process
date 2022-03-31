@@ -2,7 +2,8 @@ import express from "express";
 import {Server} from "http";
 import {createTransactionRequestHandler} from "./controller";
 import {createProcessCommission} from "./domain/process-commission";
-import {ProcessCommission, Repository, Transaction} from "./domain";
+import {Repository, Transaction} from "./domain";
+import {createCurrencyExchangeService} from "./services/currency-exchange";
 
 const inMemoryRepository: Repository = {
   get: (transaction: Transaction) => {
@@ -16,7 +17,7 @@ const inMemoryRepository: Repository = {
 /**
  * Creates the web server.
  */
-const createWebServer = () => {
+export const createWebServer = () => {
   const port = 8080;
 
   const app = express();
@@ -26,10 +27,11 @@ const createWebServer = () => {
   app.use("/", router);
 
   const {processCommission} = createProcessCommission(inMemoryRepository);
+  const {convert} = createCurrencyExchangeService();
 
   const transactionRequestHandler = createTransactionRequestHandler({
     processCommission,
-    currencyExchangeService
+    convert
   });
 
   router.post('/transaction', transactionRequestHandler);

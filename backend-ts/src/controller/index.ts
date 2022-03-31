@@ -1,46 +1,50 @@
-import { RequestHandler } from "express";
-import {ProcessCommission} from "../domain";
-import {CurrencyExchangeService} from "../services/currency-exchange";
+import {RequestHandler} from "express";
+import {CURRENCY, ProcessCommission} from "../domain";
+import {Convert} from "../services";
 
 
 /**
  * Creates the transaction request handler
  * @param repository
- * @param currencyExchangeService
  */
-export const createTransactionRequestHandler = ({ processCommission, currencyExchangeService }: {
+export const createTransactionRequestHandler = ({ processCommission, convert }: {
   processCommission: ProcessCommission,
-  currencyExchangeService: CurrencyExchangeService
+  convert: Convert
 }): RequestHandler  => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/ban-ts-comment
   // @ts-ignore
   return async (req, res, next) => {
-    const {date, amount, currency, clientId} = req.body;
+    const {date, amount, currency: transactionCurrency, clientId} = req.body;
 
     if (!date) throw new Error("Date is undefined"); // TODO: validate that it's actual date in the correct format
     if (!amount) throw new Error("Amount is undefined"); // TODO: validate that it's an actual float with 2 digits precision
-    if (!currency) throw new Error("Currency is undefined"); // TODO: validate that it's an actual valid currency
+    if (!transactionCurrency) throw new Error("Currency is undefined"); // TODO: validate that it's an actual valid currency
     if (!clientId || isNaN(clientId)) throw new Error("Client Id is undefined or not a number");
 
-    const exchangedAmount = currencyExchangeService.convert({
+    const {amountInCents: convertedAmountInCents} = await convert({
       amountInCents: convertInCents(amount),
-      sourceCurrency: currency,
+      sourceCurrency: transactionCurrency,
+      destinationCurrency: CURRENCY.EURO,
       date
     });
 
     // Call domain to do stuff
-    const {amountInCents: commisionAmountInCents, currency: commissionCurrency} = await processCommission({
-      transaction: {},
-      commisionRules: [{}]
+    const {
+      amountInCents: commissionAmountInCents,
+      currency: commissionCurrency
+    } = await processCommission({
+      transaction:  {date, amountInCents: convertedAmountInCents, currency: CURRENCY.EURO, clientId},
+      commissionRules: [{}]
     });
 
     res.send({
-      amount: commisionAmountInCents * 100,
+      amount: convertFromCents(commissionAmountInCents),
       currency: commissionCurrency
     });
   }
 
 }
 
-const convertInCents = (amount: string) => parseFloat(amount) * 100
+const convertInCents = (amount: string) => parseFloat(amount) * 100;
+const convertFromCents = (amount: number) => String(amount / 100);

@@ -1,3 +1,3 @@
 # Comissions Process
 
-### Note: Only the API is implemented
+### Note: Only the backend is implemented

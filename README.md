@@ -1,1 +1,3 @@
-# Kevin full-stack tryout boilerplate
+# Comissions Process
+
+# Note: Only the API is implemented
